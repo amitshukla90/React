@@ -13,15 +13,23 @@ class Counter extends Component{
         super(props);
         //ES 6
         //this.state = {}
+        this.inc = this.inc.bind(this);
     }
 
-    inc = (evt) => {
+    inc(){
         console.log("incr..");
-        //this.state.count++;
         this.setState({
-            count: this.state.count + 1
-        });
+                count: this.state.count + 1
+    	     });
     }
+
+    // inc = (evt) => {
+    //     console.log("incr..");
+    //     //this.state.count++;
+    //     this.setState({
+    //         count: this.state.count + 1
+    //     });
+    // }
     decr = () => {
         console.log("decr...");
         this.setState({
@@ -29,17 +37,44 @@ class Counter extends Component{
             count: this.state.count - 1
         });
     }
-    
+
+    change = (evt) => {
+
+        const value = evt.target.value;
+        this.setState({
+            count: parseInt(value)
+        });
+    }
+    update = () => {
+
+        this.setState({
+            count:  parseInt(this.countRef.value)
+        });
+    }
+
     render(){
         return (
-            <h4>
+            <div>
                 <p>{this.props.text}: {this.state.count}</p>
 
                 <div>
                     <button onClick={this.inc}>Increment</button>
                     <button onClick={this.decr}>Decrement</button>
                 </div>
-            </h4>
+                <div>
+                    {/* Controlled Input */}
+                    {this.props.text}: <input type="number" 
+                                            value={this.state.count} 
+                                            onChange={this.change}/>
+                </div>
+                <div>
+                    {/* Uncontrolled Input */}
+                    {this.props.text}:<input type="number" 
+                            ref={(inpRef) => { this.countRef = inpRef}}/>
+                    <button onClick={this.update}>Update</button>
+                </div>
+
+            </div>
         );
     }
 

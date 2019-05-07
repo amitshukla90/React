@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import Hello from './components/Hello';
 import Counter from './components/Counter';
+import ListCustomers from './components/ListCustomers';
 
 
 
@@ -19,9 +20,10 @@ function App() {
         <Hello message="Facebook"/> */}
 
 
-        <Counter text="Count"/>
-        <Counter text="Value"/>
+        {/* <Counter text="Count"/>
+        <Counter text="Value"/> */}
 
+        <ListCustomers/>
         
 
       </article>
