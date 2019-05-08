@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import { Customer } from '../model/Customer';
+import PropTypes from 'prop-types'
 
 
 class CustomerForm extends Component {
@@ -8,12 +9,31 @@ class CustomerForm extends Component {
         customer: new Customer(0, "", "")
     }
 
+    constructor(props){
+        super(props);
+
+        this.initState = {...this.state};
+        if(this.props.customer){
+            this.state.customer = this.props.customer;
+        }
+    }
+    componentWillReceiveProps(nextProps){
+        
+        //this.state.customer = nextProps.customer;
+    }
+
     change = (evt) => {
         
         const value = evt.target.value;
         const customer = {...this.state.customer};
         const propName = evt.target.name;
-        customer[propName] = value;
+        if(propName === "id"){
+            customer[propName] = parseInt(value);
+        }
+        else{
+            customer[propName] = value;
+        }
+        
 
         this.setState({
             customer: customer
@@ -22,6 +42,11 @@ class CustomerForm extends Component {
 
     save = () => {
         this.props.saved(this.state.customer);
+
+        // this.setState({
+        //     customer: new Customer(0, "", "")
+        // })
+        this.setState(this.initState);
     }
 
      render(){
@@ -42,7 +67,7 @@ class CustomerForm extends Component {
                      </div>
                      <div>
                          <button onClick={this.save}>Save</button>
-                         <button>Cancel</button>
+                         <button onClick={this.props.cancelled}>Cancel</button>
                      </div>
 
                  </fieldset>
@@ -53,3 +78,13 @@ class CustomerForm extends Component {
 }
 
 export default CustomerForm;
+
+CustomerForm.propTypes = {
+    customer: PropTypes.shape({
+        id: PropTypes.number,
+        name: PropTypes.string,
+        location: PropTypes.string
+    }),
+    saved: PropTypes.func.isRequired,
+    cancelled: PropTypes.func.isRequired
+}

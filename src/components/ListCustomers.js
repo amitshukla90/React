@@ -1,44 +1,113 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 import { Customer } from '../model/Customer';
 import './ListCustomers.css';
 import CustomerForm from './CustomerForm';
+import axios from 'axios';
 
-class ListCustomer extends Component {
+
+class ListCustomer extends PureComponent {
 
     state = {
-        customers: []
+        customers: [],
+        addMode: false,
+        selectedCustomer: null
     }
 
     constructor(props){
         
         super(props);
+        
+        this.url = "https://calm-beach-18228.herokuapp.com/Customers";
+        // this.state.customers.push(new Customer(1, "Facebook", "Bangalore"));
+        // this.state.customers.push(new Customer(2, "Apple", "Hyderabad"));
+        // this.state.customers.push(new Customer(3, "Google", "Bangalore"));
+        // this.state.customers.push(new Customer(4, "Reliance", "Mumbai"));
 
-        this.state.customers.push(new Customer(1, "Facebook", "Bangalore"));
-        this.state.customers.push(new Customer(2, "Apple", "Hyderabad"));
-        this.state.customers.push(new Customer(3, "Google", "Bangalore"));
-        this.state.customers.push(new Customer(4, "Reliance", "Mumbai"));
-
-        this.initCustomers = [...this.state.customers];
+        // this.initCustomers = [...this.state.customers];
+        console.log("[ListCustomers constructor]");
     }
 
-    add = (customer) => {
-        const updatedCustomers = [...this.state.customers];
-        updatedCustomers.push(customer);
+    componentWillMount(){
+        console.log("[ListCustomers componentWillMount]");
+    }
+    componentDidMount(){
+        console.log("[ListCustomers componentDidMount]");
 
-        this.setState({
-            customers: updatedCustomers
-        });
+        axios
+            .get(this.url)
+            .then((resp) => {
+                
+                console.log("success: ", resp);
+                this.setState({
+                    customers: resp.data
+                });
+                this.initCustomers = [...this.state.customers];
+
+            }, (resp) => {
+                console.log("error: ", resp);
+            });
+
+    }
+
+    componentWillReceiveProps(nextProps){
+        console.log("[ListCustomers componentWillReceiveProps]");
+    }
+    // shouldComponentUpdate(nextProps, nextState){
+    //     console.log("[ListCustomers shouldComponentUpdate]");
+    //     return true;
+    // }
+    componentWillUpdate(nextProps, nextState){
+        console.log("[ListCustomers componentWillUpdate]");
+    }
+    componentDidUpdate(){
+        console.log("[ListCustomers componentDidUpdate]");
+    }
+    componentWillUnmount(){
+        console.log("[ListCustomers componentWillUnmount]");
+    }
+
+
+
+
+    add = (customer) => {
+
+        axios
+            .post(this.url, customer)
+            .then(()=> {
+
+                const updatedCustomers = [...this.state.customers];
+                updatedCustomers.push(customer);
+
+                this.setState({
+                    customers: updatedCustomers
+                });
+                
+
+            }, () => {
+                alert("Save Failed");
+            });
+
+        
     }
 
     delete = (id) => {
 
-        const updatedCustomers = [...this.state.customers];
-        const index = updatedCustomers.findIndex((cust) => cust.id === id );
-        updatedCustomers.splice(index, 1);
-        this.setState({
-            customers: updatedCustomers
-        });
+        axios
+            .delete(this.url + "/" + id)
+            .then(() => {
+                const updatedCustomers = [...this.state.customers];
+                const index = updatedCustomers.findIndex((cust) => cust.id === id );
+                updatedCustomers.splice(index, 1);
+                this.setState({
+                    customers: updatedCustomers
+                });
+                alert("Deleted");
+            }, () => {
+                alert("Delete Failed: Not Found");
+            })
 
+        
+        //this.initCustomers.splice(index, 1);
     }
 
     search = (evt) => {
@@ -59,9 +128,16 @@ class ListCustomer extends Component {
         }
 
     }
+    edit = (customer)=> {
+
+        this.setState({
+            selectedCustomer: customer
+        });
+    }
 
      render(){
 
+        console.log("[ListCustomers render]");
         const customersJSX = this.state.customers.map((cust, index) => {
             return (
                 <div key={index} className="customer">
@@ -70,6 +146,7 @@ class ListCustomer extends Component {
                     <p>Location: {cust.location}</p>
                     <div>
                         <button onClick={() => {this.delete(cust.id)}}>Delete</button>
+                        <button onClick={() => {this.edit(cust)}}>Edit</button>
                     </div>
                 </div>
             );
@@ -85,11 +162,20 @@ class ListCustomer extends Component {
                      {this.state.customers.length === 0? <p>No Records Found</p>: customersJSX}
                  </div>
                  <div>
-                     <button>Add New</button>
+                     <button onClick={() => {this.setState({addMode: true})}}>Add New</button>
                  </div>   
                  <div>
-                    <CustomerForm saved={this.add}/>
+                    {this.state.addMode? <CustomerForm saved={this.add} 
+                                            cancelled={() => {this.setState({addMode: false})}}/> : null} 
                  </div> 
+                 <div>
+
+                    {this.state.selectedCustomer ? 
+                            <CustomerForm 
+                                key={this.state.selectedCustomer.id} 
+                                customer={this.state.selectedCustomer}/> : null}
+
+                 </div>
              </div>
          );
      }

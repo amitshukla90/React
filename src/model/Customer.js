@@ -5,5 +5,4 @@ export class Customer{
         this.name = name;
         this.location = location;
     }
-
 }

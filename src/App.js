@@ -20,8 +20,8 @@ function App() {
         <Hello message="Facebook"/> */}
 
 
-        {/* <Counter text="Count"/>
-        <Counter text="Value"/> */}
+        {/* <Counter text="Count"/> */}
+        {/* <Counter text="Value"/> */}
 
         <ListCustomers/>
         
