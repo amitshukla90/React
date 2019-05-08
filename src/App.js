@@ -4,6 +4,8 @@ import './App.css';
 import Hello from './components/Hello';
 import Counter from './components/Counter';
 import ListCustomers from './components/ListCustomers';
+import SimpleHOC from './components/SimpleHOC';
+import ReduxCounter from './components/ReduxCounter';
 
 
 
@@ -23,8 +25,12 @@ function App() {
         {/* <Counter text="Count"/> */}
         {/* <Counter text="Value"/> */}
 
-        <ListCustomers/>
+        {/* <SimpleHOC>
+          <ListCustomers/>
+        </SimpleHOC> */}
         
+        <ListCustomers/>
+        {/* <ReduxCounter text="Redux Counter"/> */}
 
       </article>
 

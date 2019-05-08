@@ -3,6 +3,7 @@ import { Customer } from '../model/Customer';
 import './ListCustomers.css';
 import CustomerForm from './CustomerForm';
 import axios from 'axios';
+import SimpleHOC from './SimpleHOC';
 
 
 class ListCustomer extends PureComponent {
@@ -17,7 +18,9 @@ class ListCustomer extends PureComponent {
         
         super(props);
         
-        this.url = "https://calm-beach-18228.herokuapp.com/Customers";
+        //this.url = "https://calm-beach-18228.herokuapp.com/Customers";
+        console.log("REACT_APP_REST_API_URL: " + process.env.REACT_APP_REST_API_URL);
+        this.url = process.env.REACT_APP_REST_API_URL;
         // this.state.customers.push(new Customer(1, "Facebook", "Bangalore"));
         // this.state.customers.push(new Customer(2, "Apple", "Hyderabad"));
         // this.state.customers.push(new Customer(3, "Google", "Bangalore"));
@@ -182,5 +185,5 @@ class ListCustomer extends PureComponent {
 
 }
 
-export default ListCustomer;
+export default SimpleHOC(ListCustomer);
 
